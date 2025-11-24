@@ -36,7 +36,7 @@
           <div class="candidate-row" data-cand="A">
             <img src="Resources/files/리소스/1단계_핵심지지층/Orange_logo.png" class="cand-logo" alt="주황">
             <div class="bar-container">
-              <div class="eh-bar" data-key="A" data-min="0" data-max="8">
+              <div class="eh-bar" data-key="A" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
@@ -49,7 +49,7 @@
           <div class="candidate-row" data-cand="B">
             <img src="Resources/files/리소스/1단계_핵심지지층/Purple_logo.png" class="cand-logo" alt="보라">
             <div class="bar-container">
-              <div class="eh-bar" data-key="B" data-min="0" data-max="8">
+              <div class="eh-bar" data-key="B" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
@@ -62,7 +62,7 @@
           <div class="candidate-row" data-cand="C">
             <img src="Resources/files/리소스/1단계_핵심지지층/Green_logo.png" class="cand-logo" alt="초록">
             <div class="bar-container">
-              <div class="eh-bar" data-key="C" data-min="0" data-max="8">
+              <div class="eh-bar" data-key="C" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
@@ -75,7 +75,7 @@
           <div class="candidate-row" data-cand="D">
             <img src="Resources/files/리소스/1단계_핵심지지층/White_logo.png" class="cand-logo" alt="흰색">
             <div class="bar-container">
-              <div class="eh-bar" data-key="D" data-min="0" data-max="8">
+              <div class="eh-bar" data-key="D" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
@@ -215,6 +215,7 @@
             <div class="remain-info">
               남은 개표 횟수 <b id="remain-draws">0</b>/<span id="total-draws">0</span>
             </div>
+            <div id="bag-remain-display" class="bag-remain-display"></div>
           </div>
         </div>
 
@@ -546,7 +547,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(16px, 3vw, 24px);
+    font-size: clamp(20px, 4vw, 30px);
     font-weight: 800;
     color: rgba(128, 128, 128, 0.5);
     pointer-events: none;
@@ -581,7 +582,7 @@
   .unify-btn img {
     width: 100%;
     height: 100%;
-    opacity: 0.25;
+    opacity: 0.4;
     user-select: none;
     transition: opacity 0.2s, filter 0.2s;
   }
@@ -915,7 +916,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(14px, 2.5vw, 20px);
+    font-size: clamp(18px, 3.5vw, 26px);
     font-weight: 800;
     color: rgba(128, 128, 128, 0.5);
     pointer-events: none;
@@ -950,7 +951,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     gap: clamp(12px, 2vw, 18px);
     margin-top: 15vh;
     margin-bottom: clamp(15px, 2.5vw, 25px);
@@ -975,7 +976,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    animation: cardReveal 0.8s ease-out forwards;
+    animation: cardReveal 1.2s ease-out forwards;
   }
 
   @keyframes cardReveal {
@@ -1009,10 +1010,44 @@
     font-size: clamp(15px, 2.8vw, 18px);
     font-weight: 700;
     color: #1a3a4a;
+    margin-bottom: clamp(8px, 1.5vw, 12px);
+    text-align: right;
+  }
+
+  .bag-remain-display {
+    display: flex;
+    gap: clamp(4px, 0.8vw, 6px);
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: clamp(4px, 0.8vw, 6px);
+  }
+
+  .bag-remain-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(2px, 0.4vw, 3px);
+  }
+
+  .bag-remain-item img {
+    width: clamp(20px, 3.5vw, 28px);
+    height: clamp(20px, 3.5vw, 28px);
+    object-fit: contain;
+  }
+
+  .bag-remain-item .count {
+    font-size: clamp(14px, 2.5vw, 18px);
+    font-weight: 800;
+    color: #1a3a4a;
+    min-width: clamp(14px, 2.5vw, 18px);
+    text-align: center;
   }
 
   .draw-actions {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 
   .draw-btn {
@@ -1423,13 +1458,13 @@
     '충청': 'Chungcheong',
     '서울경기': 'Seoul'
   };
-  const RANGES = { '서울경기':{min:10,max:16}, 'default':{min:8,max:13} };
+  const RANGES = { '서울경기':{min:11,max:17}, 'default':{min:8,max:13} };
 
   const state = {
-    coreSupport:{A:0,B:0,C:0,D:0},
-    baseTally:{A:0,B:0,C:0,D:0},
+    coreSupport:{A:1,B:1,C:1,D:1},
+    baseTally:{A:1,B:1,C:1,D:1},
     regionAcc:{A:0,B:0,C:0,D:0},
-    tally:{A:0,B:0,C:0,D:0},
+    tally:{A:1,B:1,C:1,D:1},
     unify:null,
     regionsDone:[],
     currentRegion:null,
@@ -1476,8 +1511,8 @@
 
     const colorName = {A:'Orange',B:'Purple',C:'Green',D:'White'}[candKey];
 
-    // 9개의 세그먼트 생성 (0~8)
-    for(let i=0; i<=8; i++) {
+    // 9개의 세그먼트 생성 (1~9)
+    for(let i=1; i<=9; i++) {
       const seg = document.createElement('button');
       seg.className = 'bar-segment';
       seg.dataset.val = i;
@@ -1516,9 +1551,9 @@
       container.appendChild(seg);
     }
 
-    // 초기값 0으로 설정
-    state.coreSupport[candKey] = 0;
-    state.baseTally[candKey] = 0;
+    // 초기값 1으로 설정
+    state.coreSupport[candKey] = 1;
+    state.baseTally[candKey] = 1;
   }
 
   C.forEach(buildCoreBar);
@@ -1685,12 +1720,13 @@
 
       const img = document.createElement('img');
 
+      // 인덱스 기반으로 번갈아가며 (첫 번째 칸은 항상 밝은색)
+      const idx = i - min;
+      const imgNum = (idx % 2 === 0) ? 1 : 2;
+
       if (isInterest) {
-        const imgNum = i <= 10 ? 1 : 2;
         img.src = `Resources/files/리소스/3단계_지역수치입력/Engagement_${imgNum}.png`;
       } else {
-        // 지지도는 화면1처럼 _1과 _2 번갈아가며 (짝수 인덱스는 _1, 홀수는 _2)
-        const imgNum = (i % 2 === 0) ? 1 : 2;
         img.src = `Resources/files/리소스/1단계_핵심지지층/${colorName}_${imgNum}.png`;
       }
 
@@ -1731,6 +1767,39 @@
 
       barEl.appendChild(cell);
     }
+  }
+
+  // 주머니 남은 표 업데이트
+  function updateBagRemainDisplay() {
+    const container = $('#bag-remain-display');
+    container.innerHTML = '';
+
+    const candidates = [
+      { key: 'A', name: 'Orange', logo: 'Resources/files/리소스/1단계_핵심지지층/Orange_logo.png' },
+      { key: 'B', name: 'Purple', logo: 'Resources/files/리소스/1단계_핵심지지층/Purple_logo.png' },
+      { key: 'C', name: 'Green', logo: 'Resources/files/리소스/1단계_핵심지지층/Green_logo.png' },
+      { key: 'D', name: 'White', logo: 'Resources/files/리소스/1단계_핵심지지층/White_logo.png' },
+      { key: 'E', name: 'Red', logo: 'Resources/files/리소스/1단계_핵심지지층/Red_icon.png' }
+    ];
+
+    candidates.forEach(cand => {
+      const count = state.bagRemain[cand.key] || 0;
+
+      const item = document.createElement('div');
+      item.className = 'bag-remain-item';
+
+      const img = document.createElement('img');
+      img.src = cand.logo;
+      img.alt = cand.name;
+
+      const countSpan = document.createElement('span');
+      countSpan.className = 'count';
+      countSpan.textContent = count;
+
+      item.appendChild(img);
+      item.appendChild(countSpan);
+      container.appendChild(item);
+    });
   }
 
   // 화면4: 개표
@@ -1778,6 +1847,9 @@
     const drawBtn = $('#draw1');
     drawBtn.disabled = false;
     drawBtn.style.opacity = '1';
+
+    // 주머니 남은 표 표시
+    updateBagRemainDisplay();
 
     recompute();
     show('#screen4');
@@ -1834,6 +1906,7 @@
     }
 
     $('#remain-draws').textContent = state.drawsRemain;
+    updateBagRemainDisplay();
 
     // 애니메이션 완료 후 버튼 다시 활성화
     setTimeout(() => {
@@ -1842,7 +1915,7 @@
         drawBtn.disabled = false;
         drawBtn.style.opacity = '1';
       }
-    }, 850);
+    }, 1275);
 
     if (state.drawsRemain === 0) {
       if (!state.regionsDone.includes(state.currentRegion)) {
@@ -1857,16 +1930,10 @@
 
       const remaining = REGIONS.filter(r => !state.regionsDone.includes(r));
 
+      // 개표 완료 버튼 표시
       setTimeout(() => {
-        if (remaining.length === 0) {
-          showFinalResults();
-        } else {
-          if (confirm('지역선택으로 넘어갑니다.')) {
-            buildRegionButtons();
-            show('#screen2');
-          }
-        }
-      }, 900);
+        showFinishButton(remaining);
+      }, 1350);
     }
   }
 
@@ -1898,8 +1965,8 @@
         };
         cardImg.src = `Resources/files/리소스/4단계_지역 개표/Red_${colorMap[state.unify]}.png`;
       } else {
-        // 단일화 안된 경우도 무효표
-        cardImg.src = 'Resources/files/리소스/4단계_지역 개표/Invalid.png';
+        // 단일화 안된 경우 Red.png
+        cardImg.src = 'Resources/files/리소스/4단계_지역 개표/Red.png';
       }
     } else {
       // A, B, C, D 후보
@@ -1920,10 +1987,66 @@
     // 애니메이션 후 제거
     setTimeout(() => {
       animArea.innerHTML = '';
-    }, 800);
+    }, 1200);
   }
 
   $('#draw1').addEventListener('click', drawOnce);
+
+  // 개표 완료 버튼 표시
+  function showFinishButton(remaining) {
+    const animArea = $('#card-animation-area');
+    animArea.innerHTML = '';
+
+    const finishBtn = document.createElement('button');
+    finishBtn.style.cssText = `
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s;
+      pointer-events: auto;
+    `;
+
+    const finishImg = document.createElement('img');
+    finishImg.src = 'Resources/files/리소스/4단계_지역 개표/Finish.png';
+    finishImg.style.cssText = `
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    `;
+
+    finishBtn.appendChild(finishImg);
+
+    finishBtn.addEventListener('click', () => {
+      animArea.innerHTML = '';
+      if (remaining.length === 0) {
+        showFinalResults();
+      } else {
+        buildRegionButtons();
+        show('#screen2');
+      }
+    });
+
+    finishBtn.addEventListener('mouseenter', () => {
+      finishBtn.style.transform = 'scale(1.05)';
+    });
+
+    finishBtn.addEventListener('mouseleave', () => {
+      finishBtn.style.transform = 'scale(1)';
+    });
+
+    finishBtn.addEventListener('mousedown', () => {
+      finishBtn.style.transform = 'scale(0.95)';
+    });
+
+    finishBtn.addEventListener('mouseup', () => {
+      finishBtn.style.transform = 'scale(1.05)';
+    });
+
+    animArea.appendChild(finishBtn);
+  }
 
   // 최종 결과
   function showFinalResults() {
