@@ -2010,6 +2010,12 @@
       img.src = cand.logo;
       img.alt = cand.name;
 
+      // E후보(군소) 아이콘은 70% 크기로 조정
+      if (cand.key === 'E') {
+        img.style.width = '70%';
+        img.style.height = '70%';
+      }
+
       const countSpan = document.createElement('span');
       countSpan.className = 'count';
       countSpan.textContent = count;
@@ -2312,6 +2318,28 @@
     const animArea = $('#card-animation-area');
     animArea.innerHTML = '';
 
+    // 개표하기 버튼 비활성화
+    const drawBtn = $('#draw1');
+    drawBtn.disabled = true;
+    drawBtn.style.opacity = '0.3';
+    drawBtn.style.pointerEvents = 'none';
+
+    // 반투명 오버레이 생성
+    const overlay = document.createElement('div');
+    overlay.id = 'finish-overlay';
+    overlay.style.cssText = `
+      position: absolute;
+      top: 25%;
+      left: 3.31%;
+      width: 93%;
+      height: 39.4%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9;
+      pointer-events: none;
+      border-radius: 0;
+    `;
+    $('.panel-4').appendChild(overlay);
+
     const finishBtn = document.createElement('button');
     finishBtn.style.cssText = `
       width: 100%;
@@ -2322,6 +2350,8 @@
       padding: 0;
       transition: transform 0.2s;
       pointer-events: auto;
+      position: relative;
+      z-index: 11;
     `;
 
     const finishImg = document.createElement('img');
@@ -2334,6 +2364,15 @@
 
     finishBtn.appendChild(finishImg);
 
+    // 오버레이 제거 함수
+    function removeOverlay() {
+      const existingOverlay = $('#finish-overlay');
+      if (existingOverlay) {
+        existingOverlay.remove();
+      }
+      drawBtn.style.pointerEvents = '';
+    }
+
     finishBtn.addEventListener('click', () => {
       // 서울경기이고 남은 지역이 없을 때 동점 체크
       if (state.currentRegion === '서울경기' && remaining.length === 0) {
@@ -2343,12 +2382,14 @@
         if (winners.length > 1) {
           // 동점 발생
           alert('동점자가 발생하여 추가개표를 진행합니다.');
+          removeOverlay();
           animArea.innerHTML = '';
           startRunoff(winners);
           return;
         }
       }
 
+      removeOverlay();
       animArea.innerHTML = '';
 
       if (remaining.length === 0) {
@@ -2435,7 +2476,13 @@
       // 득표순으로 정렬
       const sorted = C.map(k => {
         const votes = results[k] || 0;
-        const total = regionData.support[k] || 0;
+        let total = regionData.support[k] || 0;
+
+        // 단일화된 후보라면 E표(1개)도 유권자에 포함
+        if (state.unify === k) {
+          total += 1;
+        }
+
         const rate = total > 0 ? (votes / total * 100) : 0;
         return {
           cand: k,
@@ -2481,6 +2528,11 @@
       REGIONS.forEach(region => {
         totalBag += state.regionData[region].support[k] || 0;
       });
+
+      // 단일화된 후보라면 E표(지역 수만큼)도 유권자에 포함
+      if (state.unify === k) {
+        totalBag += REGIONS.length;
+      }
 
       const rate = totalBag > 0 ? (votes / totalBag * 100) : 0;
       return {
@@ -2576,6 +2628,145 @@
 
   // 초기 표시
   show('#screen1');
+
+  // ===== 디버깅 헬퍼: 도움말 =====
+  window.도움말 = function() {
+    console.log(`
+╔══════════════════════════════════════════════════════════════════╗
+║                    🎮 디버그 명령어 도움말                        ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📌 오버레이 (화면4 개표완료 시)
+────────────────────────────────────────
+  오버레이테스트()                    테스트용 오버레이 표시
+  오버레이조정(top, left, width, height)  위치/크기 (% 단위)
+  오버레이투명도(opacity)             투명도 (0~1)
+  오버레이모서리(radius)              모서리 둥글기 (px)
+  오버레이현재값()                    현재 설정값 출력
+  오버레이제거()                      오버레이 제거
+
+📌 미플 트랙 (화면4 득표 트랙)
+────────────────────────────────────────
+  미플위치조정(간격, 시작위치)         미플 가로 위치 (%)
+  미플세로조정(A, B, C, D)            미플 세로 위치 (%)
+  컨테이너조정(left, bottom, width, height)  컨테이너 위치/크기 (%)
+  컨테이너테두리(show)                테두리 표시 (true/false)
+  테스트득표(a, b, c, d)              테스트 득표 설정
+
+📌 통계 페이지 (화면6)
+────────────────────────────────────────
+  통계페이지(color)                   통계 페이지로 이동 (orange/purple/green/white)
+  통계위치조정(region, top, left)      지역 박스 위치 (%)
+  통계크기조정(rank1Size, rank234Size) 칸 크기 (px)
+  통계칸위치(region, rank, top, left)  개별 칸 위치 (px)
+  통계칸크기(region, rank, width, height)  개별 칸 크기 (px)
+  통계칸드래그모드(enable)            칸 드래그 모드 (true/false)
+  전국크기(rank1Size, rank234Size)    전국 칸 크기 (px)
+
+📌 통계 지역별 단축 명령어
+────────────────────────────────────────
+  서울경기위치(top, left)
+  강원위치(top, left)
+  충청위치(top, left)
+  경상위치(top, left)
+  전라위치(top, left)
+  전국위치(top, left)
+
+📌 투표율 (화면6)
+────────────────────────────────────────
+  투표율위치(region, bottom, right)   투표율 위치 (px)
+  투표율크기(region, fontSize)        투표율 글자 크기 (px)
+  투표율드래그모드(enable)            드래그 모드 (true/false)
+
+💡 지역명: '서울경기', '강원', '충청', '경상', '전라', '전국'
+💡 rank: 'rank1', 'rank2', 'rank3', 'rank4'
+`);
+  };
+
+  console.log('🎮 디버그 모드 활성화 - 도움말() 을 입력하세요');
+
+  // ===== 디버깅 헬퍼: 오버레이 조정 =====
+  // 브라우저 콘솔에서 사용 가능
+  window.오버레이테스트 = function() {
+    // 기존 오버레이 제거
+    const existing = $('#finish-overlay');
+    if (existing) existing.remove();
+
+    // 테스트용 오버레이 생성
+    const overlay = document.createElement('div');
+    overlay.id = 'finish-overlay';
+    overlay.style.cssText = `
+      position: absolute;
+      top: 25%;
+      left: 3.31%;
+      width: 93%;
+      height: 39.4%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9;
+      pointer-events: none;
+      border-radius: 0;
+    `;
+    $('.panel-4').appendChild(overlay);
+    console.log('✅ 오버레이 테스트 표시');
+  };
+
+  window.오버레이조정 = function(top, left, width, height) {
+    const overlay = $('#finish-overlay');
+    if (!overlay) {
+      console.log('❌ 오버레이가 없습니다. 오버레이테스트()를 먼저 실행하세요.');
+      return;
+    }
+    if (top !== undefined) overlay.style.top = top + '%';
+    if (left !== undefined) overlay.style.left = left + '%';
+    if (width !== undefined) overlay.style.width = width + '%';
+    if (height !== undefined) overlay.style.height = height + '%';
+    console.log(`✅ 오버레이 조정: top=${top}%, left=${left}%, width=${width}%, height=${height}%`);
+  };
+
+  window.오버레이투명도 = function(opacity) {
+    const overlay = $('#finish-overlay');
+    if (!overlay) {
+      console.log('❌ 오버레이가 없습니다. 오버레이테스트()를 먼저 실행하세요.');
+      return;
+    }
+    overlay.style.background = `rgba(0, 0, 0, ${opacity})`;
+    console.log(`✅ 오버레이 투명도: ${opacity * 100}%`);
+  };
+
+  window.오버레이모서리 = function(radius) {
+    const overlay = $('#finish-overlay');
+    if (!overlay) {
+      console.log('❌ 오버레이가 없습니다. 오버레이테스트()를 먼저 실행하세요.');
+      return;
+    }
+    overlay.style.borderRadius = radius + 'px';
+    console.log(`✅ 오버레이 모서리: ${radius}px`);
+  };
+
+  window.오버레이제거 = function() {
+    const overlay = $('#finish-overlay');
+    if (overlay) {
+      overlay.remove();
+      console.log('✅ 오버레이 제거됨');
+    } else {
+      console.log('❌ 오버레이가 없습니다.');
+    }
+  };
+
+  window.오버레이현재값 = function() {
+    const overlay = $('#finish-overlay');
+    if (!overlay) {
+      console.log('❌ 오버레이가 없습니다.');
+      return;
+    }
+    console.log('📋 현재 오버레이 설정:');
+    console.log(`  top: ${overlay.style.top || '0'}`);
+    console.log(`  left: ${overlay.style.left || '0'}`);
+    console.log(`  width: ${overlay.style.width || '100%'}`);
+    console.log(`  height: ${overlay.style.height || '100%'}`);
+    console.log(`  background: ${overlay.style.background}`);
+    console.log(`  borderRadius: ${overlay.style.borderRadius || '20px'}`);
+  };
 
   // ===== 디버깅 헬퍼: 미플 위치 조정 =====
   // 브라우저 콘솔에서 사용 가능
