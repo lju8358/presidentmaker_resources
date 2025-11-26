@@ -255,6 +255,62 @@
       <div class="main-panel panel-6">
         <img id="stats-bg" src="" class="panel-bg" alt="패널">
 
+        <div class="stats-content">
+          <!-- 서울경기 -->
+          <div class="region-stats seoul-stats">
+            <div class="stat-card rank1"></div>
+            <div class="stat-card rank2"></div>
+            <div class="stat-card rank3"></div>
+            <div class="stat-card rank4"></div>
+            <div class="region-turnout"></div>
+          </div>
+
+          <!-- 강원 -->
+          <div class="region-stats gangwon-stats">
+            <div class="stat-card rank1"></div>
+            <div class="stat-card rank2"></div>
+            <div class="stat-card rank3"></div>
+            <div class="stat-card rank4"></div>
+            <div class="region-turnout"></div>
+          </div>
+
+          <!-- 충청 -->
+          <div class="region-stats chungcheong-stats">
+            <div class="stat-card rank1"></div>
+            <div class="stat-card rank2"></div>
+            <div class="stat-card rank3"></div>
+            <div class="stat-card rank4"></div>
+            <div class="region-turnout"></div>
+          </div>
+
+          <!-- 경상 -->
+          <div class="region-stats gyeongsang-stats">
+            <div class="stat-card rank1"></div>
+            <div class="stat-card rank2"></div>
+            <div class="stat-card rank3"></div>
+            <div class="stat-card rank4"></div>
+            <div class="region-turnout"></div>
+          </div>
+
+          <!-- 전라 -->
+          <div class="region-stats jeolla-stats">
+            <div class="stat-card rank1"></div>
+            <div class="stat-card rank2"></div>
+            <div class="stat-card rank3"></div>
+            <div class="stat-card rank4"></div>
+            <div class="region-turnout"></div>
+          </div>
+
+          <!-- 전국 -->
+          <div class="region-stats national-stats">
+            <div class="stat-card rank1"></div>
+            <div class="stat-card rank2"></div>
+            <div class="stat-card rank3"></div>
+            <div class="stat-card rank4"></div>
+            <div class="region-turnout"></div>
+          </div>
+        </div>
+
         <button id="back-to-result" class="transparent-back-btn"></button>
       </div>
     </div>
@@ -263,6 +319,14 @@
 </div>
 
 <style>
+  /* ===== 폰트 설정 ===== */
+  @font-face {
+    font-family: 'GmarketSans';
+    src: url('Resources/fonts/GmarketSansTTFMedium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
   /* ===== 기본 설정 ===== */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -272,16 +336,23 @@
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
-    --panel-padding: clamp(25px, 4.5vw, 45px);
+    --panel-padding: 45px;
     --border-radius-sm: 8px;
     --border-radius-md: 12px;
     --border-radius-lg: 20px;
+    --scale: 1;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
   }
 
   body {
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #1a3a4a;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -290,6 +361,7 @@
     width: 100%;
     min-height: 100vh;
     position: relative;
+    overflow-x: hidden;
   }
 
   /* ===== 화면 공통 ===== */
@@ -308,7 +380,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 16px 0;
+    box-sizing: border-box;
+    overflow: visible;
   }
 
   .bg-image {
@@ -326,17 +400,20 @@
     position: relative;
     z-index: 1;
     background: transparent;
-    border-radius: var(--border-radius-lg);
+    border-radius: 20px;
     padding: 0;
-    max-width: min(1594px, 95%);
-    width: 100%;
-    aspect-ratio: 1594 / 1145;
+    width: 1594px;
+    height: 1145px;
     box-shadow: 0 10px 50px rgba(0,0,0,0.3);
-    margin: var(--spacing-md) auto;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transform: scale(var(--scale, 1));
+    transform-origin: center;
+    flex-shrink: 0;
+    /* scale 적용 시 레이아웃 공간 조정 */
+    margin: calc((1145px * (var(--scale, 1) - 1)) / 2) auto;
   }
 
   .panel-bg {
@@ -352,7 +429,7 @@
   }
 
   .panel-4 {
-    padding: clamp(20px, 3vw, 35px);
+    padding: 35px;
   }
 
   .panel-inner-bg {
@@ -374,16 +451,16 @@
 
   .panel-4 .notice-header {
     flex-shrink: 0;
-    padding: clamp(8px, 1.2vw, 12px) clamp(20px, 3vw, 40px) clamp(5px, 0.8vw, 8px);
+    padding: 12px 40px 8px;
     margin-bottom: 0;
   }
 
   .panel-4 .title-icon {
-    width: clamp(35px, 7vw, 50px);
+    width: 50px;
   }
 
   .panel-4 .notice-text h2 {
-    font-size: clamp(14px, 2.5vw, 20px);
+    font-size: 20px;
   }
 
   /* ===== 헤더 ===== */
@@ -391,22 +468,22 @@
     display: none;
     align-items: flex-end;
     justify-content: flex-start;
-    gap: clamp(10px, 2vw, 15px);
-    padding: clamp(15px, 2.5vw, 25px) clamp(30px, 4vw, 60px) clamp(10px, 1.5vw, 20px);
+    gap: 15px;
+    padding: 25px 60px 20px;
     background: transparent;
     border-radius: var(--border-radius-md);
     flex-shrink: 0;
   }
 
   .title-icon {
-    width: clamp(50px, 10vw, 70px);
+    width: 70px;
     height: auto;
     flex-shrink: 0;
     object-fit: contain;
   }
 
   .notice-text h2 {
-    font-size: clamp(17px, 3.7vw, 26px);
+    font-size: 26px;
     font-weight: 700;
     color: #1a3a4a;
     margin-bottom: 6px;
@@ -414,7 +491,7 @@
   }
 
   .notice-text .hint {
-    font-size: clamp(12px, 2.2vw, 15px);
+    font-size: 15px;
     color: #5f7a8a;
     line-height: 1.5;
     display: flex;
@@ -423,8 +500,8 @@
   }
 
   .hint-icon {
-    width: clamp(18px, 3.2vw, 22px);
-    height: clamp(18px, 3.2vw, 22px);
+    width: 22px;
+    height: 22px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -443,25 +520,26 @@
   .candidates-input {
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 1.5vw, 12px);
+    gap: 18px;
     background: transparent;
-    padding: clamp(10px, 2vw, 20px) clamp(60px, 10vw, 120px);
-    padding-top: 11vh;
+    padding: 20px 80px;
+    padding-top: 165px;
     border-radius: var(--border-radius-md);
     flex: 1;
     justify-content: center;
+    align-items: center;
     min-height: 0;
   }
 
   .candidate-row {
     display: flex;
-    gap: clamp(18px, 3.5vw, 28px);
+    gap: 42px;
     align-items: center;
   }
 
   .cand-logo {
-    width: clamp(75px, 10vw, 95px);
-    height: clamp(75px, 10vw, 95px);
+    width: 143px;
+    height: 143px;
     flex-shrink: 0;
     aspect-ratio: 1;
     object-fit: contain;
@@ -481,15 +559,15 @@
     flex-wrap: nowrap;
     align-items: center;
     position: relative;
-    height: clamp(45px, 6vw, 65px);
+    height: 98px;
     border-radius: 0;
     overflow: hidden;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
 
   .bar-segment {
-    width: clamp(45px, 6vw, 65px);
-    height: clamp(45px, 6vw, 65px);
+    width: 98px;
+    height: 98px;
     aspect-ratio: 1 / 1;
     cursor: pointer;
     position: relative;
@@ -501,8 +579,8 @@
   }
 
   .bar-segment:last-child {
-    width: clamp(45px, 6vw, 65px);
-    height: clamp(45px, 6vw, 65px);
+    width: 98px;
+    height: 98px;
     aspect-ratio: 1 / 1;
     overflow: hidden;
     position: relative;
@@ -547,7 +625,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(20px, 4vw, 30px);
+    font-size: 45px;
     font-weight: 800;
     color: rgba(128, 128, 128, 0.5);
     pointer-events: none;
@@ -565,8 +643,8 @@
   }
 
   .unify-btn {
-    width: clamp(55px, 8.5vw, 70px);
-    height: clamp(55px, 8.5vw, 70px);
+    width: 105px;
+    height: 105px;
     flex-shrink: 0;
     background: transparent;
     border: none;
@@ -616,13 +694,13 @@
     display: none;
     justify-content: flex-end;
     align-items: flex-end;
-    padding: clamp(10px, 1.5vw, 15px) clamp(30px, 4vw, 60px) clamp(15px, 2.5vw, 25px);
+    padding: 15px 60px 25px;
     flex-shrink: 0;
   }
 
   .next-btn {
     position: relative;
-    width: clamp(120px, 20vw, 160px);
+    width: 160px;
   }
 
   /* 투명 다음 단계 버튼 (새 배경 이미지의 버튼 위에 오버레이) */
@@ -662,7 +740,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(16px, 3vw, 22px);
+    font-size: 22px;
     font-weight: 800;
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
@@ -682,31 +760,33 @@
   }
 
   .back-btn {
-    padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
+    padding: 12px 30px;
     background: #94b8ff;
     border-radius: var(--border-radius-sm);
     color: white;
     font-weight: 700;
-    font-size: clamp(14px, 2.5vw, 16px);
+    font-size: 16px;
   }
 
   /* ===== 화면2: 지역 선택 ===== */
   .region-selection {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(30px, 5vw, 60px);
-    padding: clamp(10px, 2vw, 20px) clamp(30px, 4vw, 60px);
-    padding-top: 10vh;
+    gap: 60px;
+    padding: 20px 60px;
+    padding-top: 115px;
     flex: 1;
     align-items: center;
     min-height: 0;
+    transform: translateX(-50px);
   }
 
   .left-section {
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 1.5vw, 12px);
+    gap: 12px;
     align-items: center;
+    transform: translateX(10px);
   }
 
   .progress-board {
@@ -736,12 +816,12 @@
     display: none;
     color: #f2994a;
     font-weight: 800;
-    font-size: clamp(16px, 3.2vw, 22px);
+    font-size: 22px;
     text-align: center;
     line-height: 1.4;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
-    padding: clamp(8px, 1.5vw, 12px) clamp(15px, 3vw, 25px);
+    padding: 12px 25px;
     border-radius: var(--border-radius-sm);
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
@@ -749,7 +829,7 @@
   .region-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: clamp(12px, 2.5vw, 25px);
+    gap: 25px;
     align-content: center;
     justify-items: center;
   }
@@ -797,8 +877,8 @@
   .screen3-content {
     display: grid;
     grid-template-columns: 240px 1fr;
-    gap: clamp(15px, 2.5vw, 25px);
-    padding: clamp(10px, 2vw, 20px) clamp(30px, 4vw, 60px);
+    gap: 25px;
+    padding: 20px 60px;
     flex: 1;
     align-items: stretch;
     overflow: hidden;
@@ -812,38 +892,25 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: clamp(20px, 3vw, 30px) clamp(15px, 2.5vw, 20px);
+    padding: 30px 20px;
     height: 100%;
   }
 
   .region-notice-bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 95%;
-    max-height: 95%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    z-index: 0;
+    display: none;
   }
 
   .region-img-3 {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 140px;
-    height: auto;
-    margin-bottom: clamp(12px, 2vw, 18px);
+    display: none;
   }
 
   /* 오른쪽: 입력 영역 */
   .input-area-wrapper {
     position: relative;
-    padding: clamp(18px, 3vw, 25px) 0;
-    padding-top: 20vh;
+    padding: 25px 0;
+    padding-top: 229px;
     height: 90%;
+    transform: translate(250px, 20px);
   }
 
   .inputs-container {
@@ -851,24 +918,24 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: clamp(4px, 0.8vw, 8px);
+    gap: 0px;
     height: 100%;
     justify-content: space-evenly;
   }
 
   .input-row {
     display: flex;
-    gap: clamp(8px, 1.5vw, 12px);
+    gap: 17px;
     align-items: center;
   }
 
   .interest-row {
-    margin-bottom: clamp(20px, 4vw, 35px);
+    margin-bottom: 15px;
   }
 
   .interest-row .row-icon {
-    width: clamp(50px, 8vw, 65px);
-    height: clamp(50px, 8vw, 65px);
+    width: 91px;
+    height: 91px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -882,8 +949,8 @@
 
   .grid-cell {
     position: relative;
-    width: clamp(50px, 8vw, 65px);
-    height: clamp(50px, 8vw, 65px);
+    width: 91px;
+    height: 91px;
     cursor: pointer;
     transition: transform 0.2s, filter 0.2s;
     touch-action: manipulation;
@@ -916,7 +983,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(18px, 3.5vw, 26px);
+    font-size: 36px;
     font-weight: 800;
     color: rgba(128, 128, 128, 0.5);
     pointer-events: none;
@@ -941,8 +1008,8 @@
 
   .back-btn-3 {
     position: absolute;
-    bottom: clamp(20px, 3vw, 30px);
-    left: clamp(30px, 4vw, 60px);
+    bottom: 30px;
+    left: 60px;
     z-index: 10;
   }
 
@@ -951,12 +1018,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-end;
-    gap: clamp(12px, 2vw, 18px);
-    margin-top: 15vh;
-    margin-bottom: clamp(15px, 2.5vw, 25px);
-    padding: clamp(15px, 2.2vw, 22px);
-    background: rgba(230, 240, 250, 0.5);
+    align-items: center;
+    gap: 32px;
+    margin-top: 292px;
+    margin-bottom: 25px;
+    padding: 22px 72px;
+    background: transparent;
     border-radius: var(--border-radius-md);
     position: relative;
   }
@@ -966,8 +1033,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: clamp(200px, 32vw, 320px);
-    height: clamp(200px, 32vw, 320px);
+    width: 506px;
+    height: 506px;
     pointer-events: none;
     z-index: 10;
   }
@@ -999,47 +1066,47 @@
   }
 
   .region-box {
-    width: min(220px, 60vw);
+    width: 396px;
     height: auto;
     aspect-ratio: 4/3;
     object-fit: contain;
-    margin-bottom: clamp(8px, 1.5vw, 12px);
+    margin-bottom: 12px;
   }
 
   .remain-info {
-    font-size: clamp(15px, 2.8vw, 18px);
+    font-size: 27px;
     font-weight: 700;
     color: #1a3a4a;
-    margin-bottom: clamp(8px, 1.5vw, 12px);
+    margin-bottom: 12px;
     text-align: right;
   }
 
   .bag-remain-display {
     display: flex;
-    gap: clamp(4px, 0.8vw, 6px);
+    gap: 6px;
     justify-content: flex-end;
     align-items: center;
     flex-wrap: wrap;
-    margin-top: clamp(4px, 0.8vw, 6px);
+    margin-top: 6px;
   }
 
   .bag-remain-item {
     display: flex;
     align-items: center;
-    gap: clamp(2px, 0.4vw, 3px);
+    gap: 3px;
   }
 
   .bag-remain-item img {
-    width: clamp(20px, 3.5vw, 28px);
-    height: clamp(20px, 3.5vw, 28px);
+    width: 42px;
+    height: 42px;
     object-fit: contain;
   }
 
   .bag-remain-item .count {
-    font-size: clamp(14px, 2.5vw, 18px);
+    font-size: 27px;
     font-weight: 800;
     color: #1a3a4a;
-    min-width: clamp(14px, 2.5vw, 18px);
+    min-width: 27px;
     text-align: center;
   }
 
@@ -1056,7 +1123,7 @@
     background: transparent;
     cursor: pointer;
     transition: transform 0.2s;
-    width: min(250px, 70vw);
+    width: 375px;
     touch-action: manipulation;
   }
 
@@ -1070,7 +1137,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(20px, 4.5vw, 32px);
+    font-size: 32px;
     font-weight: 800;
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -1113,27 +1180,27 @@
 
   /* 각 미플의 초기 위치 (컨테이너 기준) */
   #meeple-A {
-    top: 24%;
-    left: 0.3%;
+    top: 22%;
+    left: 1.5%;
   }
 
   #meeple-B {
-    top: 41%;
-    left: 0.3%;
+    top: 39%;
+    left: 1.5%;
   }
 
   #meeple-C {
-    top: 58%;
-    left: 0.3%;
+    top: 56%;
+    left: 1.5%;
   }
 
   #meeple-D {
-    top: 75%;
-    left: 0.3%;
+    top: 73%;
+    left: 1.5%;
   }
 
   .tally-bar-bg {
-    height: clamp(30px, 5vw, 40px);
+    height: 40px;
     background: rgba(200, 210, 220, 0.3);
     border-radius: 20px;
     overflow: hidden;
@@ -1153,7 +1220,7 @@
 
   .tally-value {
     text-align: center;
-    font-size: clamp(18px, 3.5vw, 24px);
+    font-size: 24px;
     font-weight: 800;
     color: #1a3a4a;
   }
@@ -1162,72 +1229,72 @@
     margin-top: var(--spacing-md);
     max-height: 200px;
     overflow-y: auto;
-    padding: clamp(10px, 2vw, 15px);
+    padding: 15px;
     background: rgba(255, 255, 255, 0.8);
     border-radius: var(--border-radius-sm);
     font-family: 'Courier New', monospace;
-    font-size: clamp(11px, 2vw, 13px);
+    font-size: 13px;
   }
 
   /* ===== 화면5: 최종 결과 ===== */
   .panel-5 {
-    padding: clamp(25px, 4vw, 45px);
+    padding: 45px;
   }
 
   .final-results {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: clamp(10px, 2vw, 15px);
-    margin-bottom: clamp(15px, 2.5vw, 20px);
-    padding: 0 clamp(10px, 2vw, 20px);
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 0 20px;
   }
 
   .final-card {
     text-align: center;
-    padding: clamp(12px, 2.5vw, 18px);
+    padding: 18px;
     background: white;
     border-radius: var(--border-radius-md);
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 
   .final-card img {
-    width: clamp(40px, 7vw, 55px);
-    height: clamp(40px, 7vw, 55px);
-    margin-bottom: clamp(6px, 1.2vw, 8px);
+    width: 55px;
+    height: 55px;
+    margin-bottom: 8px;
   }
 
   .final-card .value {
-    font-size: clamp(22px, 4.5vw, 32px);
+    font-size: 32px;
     font-weight: 800;
     color: #1a3a4a;
   }
 
   .winner-announce {
     text-align: center;
-    font-size: clamp(18px, 3.8vw, 28px);
+    font-size: 28px;
     font-weight: 800;
-    padding: clamp(15px, 3vw, 22px);
+    padding: 22px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border-radius: var(--border-radius-md);
-    margin: 0 clamp(10px, 2vw, 20px);
-    margin-bottom: clamp(15px, 2.5vw, 20px);
+    margin: 0 20px;
+    margin-bottom: 20px;
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     line-height: 1.3;
   }
 
   .final-buttons {
     display: flex;
-    gap: clamp(15px, 3vw, 25px);
+    gap: 25px;
     justify-content: center;
     align-items: center;
   }
 
   .stats-btn,
   .restart-btn {
-    padding: clamp(12px, 2vw, 15px) clamp(35px, 6vw, 50px);
+    padding: 15px 50px;
     border-radius: var(--border-radius-md);
-    font-size: clamp(16px, 3vw, 20px);
+    font-size: 20px;
     font-weight: 700;
     cursor: pointer;
     border: none;
@@ -1262,8 +1329,8 @@
     position: absolute;
     right: 3%;
     bottom: 3%;
-    width: 11%;
-    height: 6%;
+    width: 15%;
+    height: 8%;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -1283,6 +1350,204 @@
   }
 
   /* ===== 화면6: 통계 ===== */
+  .stats-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .region-stats {
+    position: absolute;
+  }
+
+  .stat-card {
+    position: absolute;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  /* 기본 배치 (가로 배열) */
+  .stat-card.rank1 {
+    top: 0;
+    left: 0;
+    width: 110px;
+    height: 110px;
+  }
+
+  .stat-card.rank2 {
+    top: 0;
+    left: 118px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .stat-card.rank3 {
+    top: 0;
+    left: 196px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .stat-card.rank4 {
+    top: 0;
+    left: 274px;
+    width: 70px;
+    height: 70px;
+  }
+
+  /* 전국은 더 크게 */
+  .national-stats .stat-card.rank1 {
+    width: 180px;
+    height: 180px;
+  }
+
+  .national-stats .stat-card.rank2 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .national-stats .stat-card.rank3 {
+    width: 100px;
+    height: 100px;
+  }
+
+  .national-stats .stat-card.rank4 {
+    width: 100px;
+    height: 100px;
+  }
+
+  /* 각 지역별 개별 칸 위치 조정 */
+  .seoul-stats .rank1 { top: 1px; left: 4px; }
+  .seoul-stats .rank2 { top: 9px; left: 124px; }
+  .seoul-stats .rank3 { top: 9px; left: 192px; }
+  .seoul-stats .rank4 { top: 9px; left: 262px; }
+
+  .gangwon-stats .rank1 { top: 4px; left: 3px; }
+  .gangwon-stats .rank2 { top: 10px; left: 122px; }
+  .gangwon-stats .rank3 { top: 11px; left: 192px; }
+  .gangwon-stats .rank4 { top: 11px; left: 261px; }
+
+  .chungcheong-stats .rank1 { top: 0px; left: 1px; }
+  .chungcheong-stats .rank2 { top: 7px; left: 123px; }
+  .chungcheong-stats .rank3 { top: 7px; left: 192px; }
+  .chungcheong-stats .rank4 { top: 7px; left: 260px; }
+
+  .gyeongsang-stats .rank1 { top: 1px; left: 5px; }
+  .gyeongsang-stats .rank2 { top: 9px; left: 126px; }
+  .gyeongsang-stats .rank3 { top: 8px; left: 195px; }
+  .gyeongsang-stats .rank4 { top: 9px; left: 263px; }
+
+  .jeolla-stats .rank2 { top: 9px; left: 122px; }
+  .jeolla-stats .rank3 { top: 10px; left: 190px; }
+  .jeolla-stats .rank4 { top: 10px; left: 258px; }
+
+  .national-stats .rank1 { top: 13px; left: -3px; }
+  .national-stats .rank2 { top: 24px; left: 192px; }
+  .national-stats .rank3 { top: 24px; left: 296px; }
+  .national-stats .rank4 { top: 24px; left: 401px; }
+
+  .stat-logo {
+    width: 70%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .stat-card.rank1 .stat-logo {
+    width: 75%;
+  }
+
+  .stat-votes {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a3a4a;
+    line-height: 1;
+  }
+
+  .stat-card.rank1 .stat-votes {
+    font-size: 22px;
+  }
+
+  .stat-rate {
+    font-size: 13px;
+    font-weight: 700;
+    color: #5f7a8a;
+    line-height: 1;
+  }
+
+  .stat-card.rank1 .stat-rate {
+    font-size: 15px;
+  }
+
+  .region-turnout {
+    position: absolute;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'GmarketSans', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    bottom: 5px;
+    right: 10px;
+  }
+
+  .national-stats .region-turnout {
+    font-size: 36px;
+  }
+
+  .seoul-stats .region-turnout,
+  .gangwon-stats .region-turnout,
+  .chungcheong-stats .region-turnout,
+  .gyeongsang-stats .region-turnout,
+  .jeolla-stats .region-turnout {
+    font-size: 26px;
+  }
+
+  /* 각 지역별 투표율 위치 */
+  .seoul-stats .region-turnout { bottom: 22px; right: -368px; }
+  .gangwon-stats .region-turnout { bottom: 22px; right: -363px; }
+  .chungcheong-stats .region-turnout { bottom: 23px; right: -364px; }
+  .gyeongsang-stats .region-turnout { bottom: 24px; right: -366px; }
+  .jeolla-stats .region-turnout { bottom: 21px; right: -361px; }
+  .national-stats .region-turnout { bottom: 17px; right: -463px; }
+
+  /* 각 지역 위치 */
+  .seoul-stats {
+    top: 32.6%;
+    left: 9.5%;
+  }
+
+  .gangwon-stats {
+    top: 32.7%;
+    left: 60.3%;
+  }
+
+  .chungcheong-stats {
+    top: 56.9%;
+    left: 16.2%;
+  }
+
+  .gyeongsang-stats {
+    top: 55.0%;
+    left: 73.7%;
+  }
+
+  .jeolla-stats {
+    top: 81.2%;
+    left: 8.5%;
+  }
+
+  .national-stats {
+    top: 76.8%;
+    left: 59.5%;
+  }
+
   .transparent-back-btn {
     position: absolute;
     left: 3%;
@@ -1327,75 +1592,25 @@
   }
 
   /* ===== 반응형: 대형 화면 (1440px+) ===== */
-  @media (min-width: 1440px) {
-    .main-panel {
-      max-width: 1000px;
-    }
-  }
+  /* scale 방식 사용으로 미디어 쿼리 불필요 */
 
   /* ===== 모바일 최적화 (작은 화면) ===== */
+  /* scale 방식을 사용하므로 대부분의 모바일 최적화가 자동으로 처리됨 */
   @media (max-width: 767px) {
-    .candidates-input {
-      padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 40px);
-      gap: clamp(12px, 2.5vw, 18px);
-    }
-
-    .candidate-row {
-      gap: clamp(10px, 2vw, 15px);
-    }
-
-    .cand-logo {
-      width: 50px;
-      height: 50px;
-    }
-
-    .bar-segment {
-      width: 35px;
-      height: 35px;
-    }
-
-    .bar-segment:last-child {
-      width: 35px;
-      height: 35px;
-    }
-
-    .bar-images {
-      height: 35px;
-    }
-
-    .unify-btn {
-      width: 40px;
-      height: 40px;
-    }
-
+    /* 필요시 레이아웃 변경만 유지 */
     .region-selection {
       grid-template-columns: 1fr;
-      gap: clamp(20px, 4vw, 30px);
-    }
-
-    .progress-board {
-      max-width: 400px;
+      gap: 30px;
     }
 
     .region-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: clamp(10px, 2vw, 15px);
+      gap: 15px;
     }
 
     .screen3-content {
       grid-template-columns: 1fr;
-      gap: clamp(20px, 3vw, 25px);
-    }
-
-    .region-info-box {
-      max-width: 320px;
-      margin: 0 auto;
-    }
-
-    .back-btn-3 {
-      position: static;
-      margin: clamp(15px, 3vw, 20px) auto 0;
-      display: block;
+      gap: 25px;
     }
   }
 
@@ -1471,6 +1686,9 @@
     regionData:{},
     bagRemain:{A:0,B:0,C:0,D:0,E:0},
     drawsRemain:0,
+    runoffMode:false,
+    runoffCandidates:[],
+    regionResults:{}, // 지역별 득표 결과
   };
   REGIONS.forEach(r=>{ state.regionData[r]={interest:0, support:{A:0,B:0,C:0,D:0}}; });
 
@@ -1496,7 +1714,7 @@
       // 컨테이너 내에서 상대적 위치 계산
       if (tallyValue >= 0 && tallyValue <= 24) {
         // 조정 가능한 값들 (브라우저 콘솔에서 window.meepleConfig로 실시간 변경 가능)
-        const config = window.meepleConfig || { 간격: 3.38, 시작위치: 0.3 };
+        const config = window.meepleConfig || { 간격: 3.3, 시작위치: 1.5 };
         const leftPosition = (tallyValue * config.간격) + config.시작위치;
         meeple.style.left = `${leftPosition}%`;
       }
@@ -1659,13 +1877,13 @@
     const regionFile = REGION_MAP[region];
     $('#region-image').src = `Resources/files/리소스/3단계_지역수치입력/${regionFile}.png`;
 
-    // 패널 배경 이미지 업데이트 (지역별로 new_background1~5)
+    // 패널 배경 이미지 업데이트 (지역별 매핑)
     const regionBgMap = {
-      '전라': 1,
+      '전라': 4,
       '경상': 2,
-      '강원': 3,
-      '충청': 4,
-      '서울경기': 5
+      '강원': 1,
+      '충청': 5,
+      '서울경기': 3
     };
     const bgNum = regionBgMap[region] || 1;
     const panelBg = $('#screen3-bg');
@@ -1890,50 +2108,117 @@
     drawBtn.style.opacity = '0.6';
 
     const picked = pickOne();
-    state.drawsRemain -= 1;
 
-    if (picked) {
-      state.bagRemain[picked] -= 1;
+    if (state.runoffMode) {
+      // 추가개표 모드
+      if (picked) {
+        state.bagRemain[picked] -= 1;
+        showCardAnimation(picked);
 
-      // 카드 애니메이션 표시
-      showCardAnimation(picked);
+        // 동점자의 표인지 확인 (E표 포함)
+        let isRunoffCandidate = false;
 
-      credit(picked);
-      recompute();
+        if (picked === 'E' && state.unify && state.runoffCandidates.includes(state.unify)) {
+          // 단일화된 후보가 동점자
+          state.regionAcc[state.unify] += 1;
+          isRunoffCandidate = true;
+        } else if (picked !== 'E' && state.runoffCandidates.includes(picked)) {
+          // 동점자의 표
+          state.regionAcc[picked] += 1;
+          isRunoffCandidate = true;
+        }
+        // else: 동점자가 아닌 표는 무시 (트랙 진행 안 함)
+
+        recompute();
+        updateBagRemainDisplay();
+
+        setTimeout(() => {
+          isAnimating = false;
+
+          if (isRunoffCandidate) {
+            // 동점이 해소됨 - 개표 완료 버튼 표시
+            state.runoffMode = false;
+            state.runoffCandidates = [];
+
+            // baseTally에 누적
+            C.forEach(k => {
+              state.baseTally[k] += state.regionAcc[k];
+              state.regionAcc[k] = 0;
+            });
+
+            setTimeout(() => {
+              showFinishButton([]);
+            }, 350);
+          } else {
+            // 동점자가 아닌 표 - 계속 진행
+            drawBtn.disabled = false;
+            drawBtn.style.opacity = '1';
+          }
+        }, 1275);
+      } else {
+        // 주머니가 비었을 때 (이론상 발생 안 함)
+        showCardAnimation(null);
+        setTimeout(() => {
+          isAnimating = false;
+          drawBtn.disabled = false;
+          drawBtn.style.opacity = '1';
+        }, 1275);
+      }
     } else {
-      // 주머니가 비었지만 개표 횟수는 남은 경우 - 무효표
-      showCardAnimation(null);
-    }
+      // 기존 개표 로직
+      state.drawsRemain -= 1;
 
-    $('#remain-draws').textContent = state.drawsRemain;
-    updateBagRemainDisplay();
+      if (picked) {
+        state.bagRemain[picked] -= 1;
 
-    // 애니메이션 완료 후 버튼 다시 활성화
-    setTimeout(() => {
-      isAnimating = false;
-      if (state.drawsRemain > 0) {
-        drawBtn.disabled = false;
-        drawBtn.style.opacity = '1';
-      }
-    }, 1275);
+        // 카드 애니메이션 표시
+        showCardAnimation(picked);
 
-    if (state.drawsRemain === 0) {
-      if (!state.regionsDone.includes(state.currentRegion)) {
-        state.regionsDone.push(state.currentRegion);
+        credit(picked);
+        recompute();
+      } else {
+        // 주머니가 비었지만 개표 횟수는 남은 경우 - 무효표
+        showCardAnimation(null);
       }
 
-      // 현재 지역의 득표를 baseTally에 누적하고 regionAcc 초기화
-      C.forEach(k => {
-        state.baseTally[k] += state.regionAcc[k];
-        state.regionAcc[k] = 0;
-      });
+      $('#remain-draws').textContent = state.drawsRemain;
+      updateBagRemainDisplay();
 
-      const remaining = REGIONS.filter(r => !state.regionsDone.includes(r));
-
-      // 개표 완료 버튼 표시
+      // 애니메이션 완료 후 버튼 다시 활성화
       setTimeout(() => {
-        showFinishButton(remaining);
-      }, 1350);
+        isAnimating = false;
+        if (state.drawsRemain > 0) {
+          drawBtn.disabled = false;
+          drawBtn.style.opacity = '1';
+        }
+      }, 1275);
+
+      if (state.drawsRemain === 0) {
+        if (!state.regionsDone.includes(state.currentRegion)) {
+          state.regionsDone.push(state.currentRegion);
+        }
+
+        // 지역별 득표 결과 저장 (통계용)
+        if (!state.regionResults[state.currentRegion]) {
+          state.regionResults[state.currentRegion] = {};
+        }
+        C.forEach(k => {
+          state.regionResults[state.currentRegion][k] = state.regionAcc[k];
+        });
+
+        // 현재 지역의 득표를 baseTally에 누적하고 regionAcc 초기화
+        C.forEach(k => {
+          state.baseTally[k] += state.regionAcc[k];
+          state.regionAcc[k] = 0;
+        });
+
+        const remaining = REGIONS.filter(r => !state.regionsDone.includes(r));
+
+        // 개표 완료 버튼 표시
+        setTimeout(() => {
+          showFinishButton(remaining);
+        }, 1350);
+      }
     }
   }
 
@@ -1992,6 +2277,36 @@
 
   $('#draw1').addEventListener('click', drawOnce);
 
+  // 추가개표 시작
+  function startRunoff(tiedCandidates) {
+    // 추가개표 모드 활성화
+    state.runoffMode = true;
+    state.runoffCandidates = tiedCandidates;
+
+    // 주머니에 남아있는 표 유지하고, 동점자들의 표만 1개씩 추가
+    tiedCandidates.forEach(cand => {
+      state.bagRemain[cand] += 1;
+    });
+
+    // 개표 횟수는 무제한 (동점자 표가 나올 때까지)
+    state.drawsRemain = 999;
+
+    $('#remain-draws').textContent = '추가개표';
+    $('#total-draws').textContent = '진행중';
+
+    updateBagRemainDisplay();
+
+    // 개표 버튼 활성화
+    const drawBtn = $('#draw1');
+    drawBtn.disabled = false;
+    drawBtn.style.opacity = '1';
+    isAnimating = false;
+
+    // 애니메이션 영역 초기화
+    const animArea = $('#card-animation-area');
+    animArea.innerHTML = '';
+  }
+
   // 개표 완료 버튼 표시
   function showFinishButton(remaining) {
     const animArea = $('#card-animation-area');
@@ -2020,7 +2335,22 @@
     finishBtn.appendChild(finishImg);
 
     finishBtn.addEventListener('click', () => {
+      // 서울경기이고 남은 지역이 없을 때 동점 체크
+      if (state.currentRegion === '서울경기' && remaining.length === 0) {
+        const max = Math.max(...C.map(k => state.tally[k]));
+        const winners = C.filter(k => state.tally[k] === max);
+
+        if (winners.length > 1) {
+          // 동점 발생
+          alert('동점자가 발생하여 추가개표를 진행합니다.');
+          animArea.innerHTML = '';
+          startRunoff(winners);
+          return;
+        }
+      }
+
       animArea.innerHTML = '';
+
       if (remaining.length === 0) {
         showFinalResults();
       } else {
@@ -2080,12 +2410,126 @@
     show('#screen5');
   }
 
+  // 통계 계산 및 표시
+  function displayStats() {
+    const regionStatsMap = {
+      '서울경기': '.seoul-stats',
+      '강원': '.gangwon-stats',
+      '충청': '.chungcheong-stats',
+      '경상': '.gyeongsang-stats',
+      '전라': '.jeolla-stats'
+    };
+
+    const logoMap = {
+      'A': 'Resources/files/리소스/1단계_핵심지지층/Orange_logo.png',
+      'B': 'Resources/files/리소스/1단계_핵심지지층/Purple_logo.png',
+      'C': 'Resources/files/리소스/1단계_핵심지지층/Green_logo.png',
+      'D': 'Resources/files/리소스/1단계_핵심지지층/White_logo.png'
+    };
+
+    // 지역별 통계
+    REGIONS.forEach(region => {
+      const results = state.regionResults[region] || {A:0, B:0, C:0, D:0};
+      const regionData = state.regionData[region];
+
+      // 득표순으로 정렬
+      const sorted = C.map(k => {
+        const votes = results[k] || 0;
+        const total = regionData.support[k] || 0;
+        const rate = total > 0 ? (votes / total * 100) : 0;
+        return {
+          cand: k,
+          votes: votes,
+          rate: rate
+        };
+      }).sort((a, b) => b.votes - a.votes);
+
+      // 투표율 계산: 개표회수 / 주머니 내부 표의 총개수
+      const totalVotesDrawn = C.reduce((sum, k) => sum + (results[k] || 0), 0);
+      const totalVotesInBag = C.reduce((sum, k) => sum + (regionData.support[k] || 0), 0);
+      const turnout = totalVotesInBag > 0 ? (totalVotesDrawn / totalVotesInBag * 100) : 0;
+
+      // HTML 업데이트
+      const container = $(regionStatsMap[region]);
+      if (container) {
+        sorted.forEach((data, index) => {
+          const card = container.querySelector(`.rank${index + 1}`);
+          if (card) {
+            card.innerHTML = `
+              <img src="${logoMap[data.cand]}" class="stat-logo" alt="${data.cand}">
+              <div class="stat-votes">${data.votes}</div>
+              <div class="stat-rate">${data.rate.toFixed(1)}%</div>
+            `;
+          }
+        });
+
+        // 투표율 표시
+        const turnoutEl = container.querySelector('.region-turnout');
+        if (turnoutEl) {
+          turnoutEl.textContent = `${turnout.toFixed(1)}%`;
+        }
+      }
+    });
+
+    // 전국 통계
+    const nationalSorted = C.map(k => {
+      // 전체 득표수 - 핵심지지층
+      const votes = (state.tally[k] || 0) - (state.coreSupport[k] || 0);
+
+      // 모든 지역 주머니 합계
+      let totalBag = 0;
+      REGIONS.forEach(region => {
+        totalBag += state.regionData[region].support[k] || 0;
+      });
+
+      const rate = totalBag > 0 ? (votes / totalBag * 100) : 0;
+      return {
+        cand: k,
+        votes: votes,
+        rate: rate
+      };
+    }).sort((a, b) => b.votes - a.votes);
+
+    // 전국 투표율 계산
+    let nationalTotalDrawn = 0;
+    let nationalTotalBag = 0;
+    REGIONS.forEach(region => {
+      const results = state.regionResults[region] || {A:0, B:0, C:0, D:0};
+      const regionData = state.regionData[region];
+      C.forEach(k => {
+        nationalTotalDrawn += results[k] || 0;
+        nationalTotalBag += regionData.support[k] || 0;
+      });
+    });
+    const nationalTurnout = nationalTotalBag > 0 ? (nationalTotalDrawn / nationalTotalBag * 100) : 0;
+
+    const nationalContainer = $('.national-stats');
+    if (nationalContainer) {
+      nationalSorted.forEach((data, index) => {
+        const card = nationalContainer.querySelector(`.rank${index + 1}`);
+        if (card) {
+          card.innerHTML = `
+            <img src="${logoMap[data.cand]}" class="stat-logo" alt="${data.cand}">
+            <div class="stat-votes">${data.votes}</div>
+            <div class="stat-rate">${data.rate.toFixed(1)}%</div>
+          `;
+        }
+      });
+
+      // 전국 투표율 표시
+      const turnoutEl = nationalContainer.querySelector('.region-turnout');
+      if (turnoutEl) {
+        turnoutEl.textContent = `${nationalTurnout.toFixed(1)}%`;
+      }
+    }
+  }
+
   // 통계보기 버튼
   $('#view-stats').addEventListener('click', () => {
     // 통계 페이지 배경 설정
     const statsBg = $('#stats-bg');
-    const max = Math.max(...C.map(k => state.tally[k]));
-    const winners = C.filter(k => state.tally[k] === max);
+    const max = Math.max(...C.map(k => state.tally[k] || 0));
+    const winners = C.filter(k => (state.tally[k] || 0) === max);
 
     const colorMap = {
       'A': 'orange',
@@ -2094,12 +2538,14 @@
       'D': 'white'
     };
 
-    if (winners.length === 1) {
-      statsBg.src = `Resources/files/리소스/6단계_통계/background_${colorMap[winners[0]]}.png`;
-    } else {
-      // 공동 당선인 경우 첫 번째 후보 배경 사용
-      statsBg.src = `Resources/files/리소스/6단계_통계/background_${colorMap[winners[0]]}.png`;
-    }
+    // 당선자 결정 (득표가 없거나 모두 0이면 C(green) 기본값)
+    const winner = (winners.length > 0 && max > 0) ? winners[0] : 'C';
+    const color = colorMap[winner] || 'green';
+
+    statsBg.src = `Resources/files/리소스/6단계_통계/background_${color}.png`;
+
+    // 통계 데이터 표시
+    displayStats();
 
     show('#screen6');
   });
@@ -2108,6 +2554,25 @@
   $('#back-to-result').addEventListener('click', () => {
     show('#screen5');
   });
+
+  // ===== Scale 계산 (고정 크기 1594x1145 기준) =====
+  function updateScale() {
+    const baseWidth = 1594;
+    const baseHeight = 1145;
+    const margin = 32; // 여백
+
+    const scaleX = (window.innerWidth - margin) / baseWidth;
+    const scaleY = (window.innerHeight - margin) / baseHeight;
+
+    // 화면에 완전히 맞추기: 가로/세로 모두 고려, 스크롤 없음
+    const scale = Math.min(scaleX, scaleY, 1);
+
+    document.documentElement.style.setProperty('--scale', scale);
+  }
+
+  window.addEventListener('resize', updateScale);
+  window.addEventListener('load', updateScale);
+  updateScale(); // 초기 실행
 
   // 초기 표시
   show('#screen1');
@@ -2150,13 +2615,629 @@
     console.log(`✅ 테스트 득표 설정: A=${a}, B=${b}, C=${c}, D=${d}`);
   };
 
-  console.log('%c미플 위치 조정 도구 로드됨!', 'color: green; font-size: 16px; font-weight: bold;');
-  console.log('사용 가능한 함수:');
-  console.log('  미플위치조정(간격, 시작위치) - 현재: 미플위치조정(3.38, 0.3)');
+  // ===== 통계 위치 조정 함수 =====
+
+  // 통계 위치 조정
+  window.통계위치조정 = function(region, top, left) {
+    const classMap = {
+      '서울경기': '.seoul-stats',
+      '강원': '.gangwon-stats',
+      '충청': '.chungcheong-stats',
+      '경상': '.gyeongsang-stats',
+      '전라': '.jeolla-stats',
+      '전국': '.national-stats'
+    };
+
+    const element = $(classMap[region]);
+    if (element) {
+      if (top !== undefined) element.style.top = top + '%';
+      if (left !== undefined) element.style.left = left + '%';
+      console.log(`✅ ${region} 위치 조정: top=${top}%, left=${left}%`);
+    } else {
+      console.error(`❌ 지역을 찾을 수 없습니다: ${region}`);
+    }
+  };
+
+  // 개별 지역 위치 조정
+  window.서울경기위치 = function(top, left) { 통계위치조정('서울경기', top, left); };
+  window.강원위치 = function(top, left) { 통계위치조정('강원', top, left); };
+  window.충청위치 = function(top, left) { 통계위치조정('충청', top, left); };
+  window.경상위치 = function(top, left) { 통계위치조정('경상', top, left); };
+  window.전라위치 = function(top, left) { 통계위치조정('전라', top, left); };
+  window.전국위치 = function(top, left) { 통계위치조정('전국', top, left); };
+
+  // 통계 칸 크기 조정
+  window.통계크기조정 = function(rank1Size, rank234Size) {
+    const rank1Cards = $$('.stat-card.rank1');
+    const otherCards = $$('.stat-card.rank2, .stat-card.rank3, .stat-card.rank4');
+
+    if (rank1Size !== undefined) {
+      rank1Cards.forEach(card => {
+        card.style.width = rank1Size + 'px';
+        card.style.height = rank1Size + 'px';
+      });
+    }
+
+    if (rank234Size !== undefined) {
+      otherCards.forEach(card => {
+        card.style.width = rank234Size + 'px';
+        card.style.height = rank234Size + 'px';
+      });
+    }
+
+    console.log(`✅ 통계 칸 크기 조정: rank1=${rank1Size}px, rank2-4=${rank234Size}px`);
+  };
+
+  // 박스 내 개별 칸 위치 조정 (px 단위)
+  window.통계칸위치 = function(region, rank, top, left) {
+    const classMap = {
+      '서울경기': '.seoul-stats',
+      '강원': '.gangwon-stats',
+      '충청': '.chungcheong-stats',
+      '경상': '.gyeongsang-stats',
+      '전라': '.jeolla-stats',
+      '전국': '.national-stats'
+    };
+
+    const container = $(classMap[region]);
+    if (container) {
+      const card = container.querySelector(`.${rank}`);
+      if (card) {
+        if (top !== undefined) card.style.top = top + 'px';
+        if (left !== undefined) card.style.left = left + 'px';
+        console.log(`✅ ${region} ${rank} 위치: top=${top}px, left=${left}px`);
+      } else {
+        console.error(`❌ ${rank}를 찾을 수 없습니다`);
+      }
+    } else {
+      console.error(`❌ ${region}를 찾을 수 없습니다`);
+    }
+  };
+
+  // 박스 내 개별 칸 크기 조정
+  window.통계칸크기 = function(region, rank, width, height) {
+    const classMap = {
+      '서울경기': '.seoul-stats',
+      '강원': '.gangwon-stats',
+      '충청': '.chungcheong-stats',
+      '경상': '.gyeongsang-stats',
+      '전라': '.jeolla-stats',
+      '전국': '.national-stats'
+    };
+
+    const container = $(classMap[region]);
+    if (container) {
+      const card = container.querySelector(`.${rank}`);
+      if (card) {
+        if (width !== undefined) card.style.width = width + 'px';
+        if (height !== undefined) card.style.height = height + 'px';
+        console.log(`✅ ${region} ${rank} 크기: ${width}x${height}px`);
+      }
+    }
+  };
+
+  // 전국 박스 전용 크기 조정
+  window.전국크기 = function(rank1Size, rank234Size) {
+    const national = $('.national-stats');
+    if (national) {
+      if (rank1Size !== undefined) {
+        const rank1 = national.querySelector('.rank1');
+        if (rank1) {
+          rank1.style.width = rank1Size + 'px';
+          rank1.style.height = rank1Size + 'px';
+        }
+      }
+
+      if (rank234Size !== undefined) {
+        ['rank2', 'rank3', 'rank4'].forEach(rank => {
+          const card = national.querySelector(`.${rank}`);
+          if (card) {
+            card.style.width = rank234Size + 'px';
+            card.style.height = rank234Size + 'px';
+          }
+        });
+      }
+
+      console.log(`✅ 전국 크기: rank1=${rank1Size}px, rank2-4=${rank234Size}px`);
+    }
+  };
+
+  // 칸 내부 드래그 모드 (박스 내 칸들을 드래그)
+  window.통계칸드래그모드 = function(enable = true) {
+    const allCards = $$('.stat-card');
+
+    if (enable) {
+      allCards.forEach(card => {
+        card.style.border = '1px solid blue';
+        card.style.cursor = 'move';
+
+        const mouseDown = (e) => {
+          dragState.isDragging = true;
+          dragState.element = card;
+          dragState.startX = e.clientX;
+          dragState.startY = e.clientY;
+
+          const computedLeft = parseFloat(card.style.left) || 0;
+          const computedTop = parseFloat(card.style.top) || 0;
+          dragState.startLeft = computedLeft;
+          dragState.startTop = computedTop;
+
+          e.preventDefault();
+          e.stopPropagation();
+        };
+
+        card._cardDragMouseDown = mouseDown;
+        card.addEventListener('mousedown', mouseDown);
+      });
+
+      // 마우스업 이벤트 수정 (픽셀 단위로)
+      document._cardDragMouseUp = () => {
+        if (dragState.isDragging && dragState.element && dragState.element.classList.contains('stat-card')) {
+          dragState.isDragging = false;
+
+          const element = dragState.element;
+          const left = parseFloat(element.style.left);
+          const top = parseFloat(element.style.top);
+
+          // 지역과 rank 찾기
+          const parent = element.parentElement;
+          const classMap = {
+            'seoul-stats': '서울경기',
+            'gangwon-stats': '강원',
+            'chungcheong-stats': '충청',
+            'gyeongsang-stats': '경상',
+            'jeolla-stats': '전라',
+            'national-stats': '전국'
+          };
+
+          let regionName = '';
+          for (const [className, name] of Object.entries(classMap)) {
+            if (parent.classList.contains(className)) {
+              regionName = name;
+              break;
+            }
+          }
+
+          let rankName = '';
+          if (element.classList.contains('rank1')) rankName = 'rank1';
+          else if (element.classList.contains('rank2')) rankName = 'rank2';
+          else if (element.classList.contains('rank3')) rankName = 'rank3';
+          else if (element.classList.contains('rank4')) rankName = 'rank4';
+
+          console.log(`✅ ${regionName} ${rankName}: 통계칸위치("${regionName}", "${rankName}", ${top.toFixed(0)}, ${left.toFixed(0)})`);
+
+          dragState.element = null;
+        }
+      };
+
+      document.addEventListener('mouseup', document._cardDragMouseUp);
+
+      console.log('✅ 칸 드래그 모드 활성화 - 각 칸을 드래그하여 위치 조정하세요');
+    } else {
+      allCards.forEach(card => {
+        card.style.border = 'none';
+        card.style.cursor = 'default';
+
+        if (card._cardDragMouseDown) {
+          card.removeEventListener('mousedown', card._cardDragMouseDown);
+          delete card._cardDragMouseDown;
+        }
+      });
+
+      if (document._cardDragMouseUp) {
+        document.removeEventListener('mouseup', document._cardDragMouseUp);
+        delete document._cardDragMouseUp;
+      }
+
+      console.log('✅ 칸 드래그 모드 비활성화');
+    }
+  };
+
+  // 통계 페이지로 바로 이동 (테스트용)
+  window.통계페이지 = function(color) {
+    const statsBg = $('#stats-bg');
+
+    // 색상이 지정되지 않으면 현재 득표 기반으로 자동 계산
+    if (!color) {
+      const max = Math.max(...C.map(k => state.tally[k] || 0));
+      const winners = C.filter(k => (state.tally[k] || 0) === max);
+
+      const colorMap = {
+        'A': 'orange',
+        'B': 'purple',
+        'C': 'green',
+        'D': 'white'
+      };
+
+      // 당선자 결정 (득표가 없거나 모두 0이면 C(green) 기본값)
+      const winner = (winners.length > 0 && max > 0) ? winners[0] : 'C';
+      color = colorMap[winner] || 'green';
+    }
+
+    statsBg.src = `Resources/files/리소스/6단계_통계/background_${color}.png`;
+
+    show('#screen6');
+    displayStats();
+    console.log(`✅ 통계 페이지로 이동했습니다. (배경: ${color})`);
+  };
+
+  // 투표율 위치 조정 함수
+  window.투표율위치 = function(region, bottom, right) {
+    const regionMap = {
+      '서울경기': '.seoul-stats',
+      '강원': '.gangwon-stats',
+      '충청': '.chungcheong-stats',
+      '경상': '.gyeongsang-stats',
+      '전라': '.jeolla-stats',
+      '전국': '.national-stats'
+    };
+
+    const selector = regionMap[region];
+    if (!selector) {
+      console.log(`❌ 알 수 없는 지역: ${region}`);
+      return;
+    }
+
+    const container = $(selector);
+    const turnoutEl = container?.querySelector('.region-turnout');
+    if (turnoutEl) {
+      turnoutEl.style.bottom = `${bottom}px`;
+      turnoutEl.style.right = `${right}px`;
+      console.log(`✅ ${region} 투표율 위치: 투표율위치("${region}", ${bottom}, ${right})`);
+    }
+  };
+
+  // 투표율 크기 조정 함수
+  window.투표율크기 = function(region, fontSize) {
+    const regionMap = {
+      '서울경기': '.seoul-stats',
+      '강원': '.gangwon-stats',
+      '충청': '.chungcheong-stats',
+      '경상': '.gyeongsang-stats',
+      '전라': '.jeolla-stats',
+      '전국': '.national-stats'
+    };
+
+    const selector = regionMap[region];
+    if (!selector) {
+      console.log(`❌ 알 수 없는 지역: ${region}`);
+      return;
+    }
+
+    const container = $(selector);
+    const turnoutEl = container?.querySelector('.region-turnout');
+    if (turnoutEl) {
+      turnoutEl.style.fontSize = `${fontSize}px`;
+      console.log(`✅ ${region} 투표율 크기: 투표율크기("${region}", ${fontSize})`);
+    }
+  };
+
+  // 투표율 드래그 모드
+  window.투표율드래그모드 = function(enable = true) {
+    const regionNames = ['서울경기', '강원', '충청', '경상', '전라', '전국'];
+    const regionClasses = ['.seoul-stats', '.gangwon-stats', '.chungcheong-stats',
+                          '.gyeongsang-stats', '.jeolla-stats', '.national-stats'];
+
+    if (enable) {
+      regionClasses.forEach((className, index) => {
+        const container = $(className);
+        const turnoutEl = container?.querySelector('.region-turnout');
+
+        if (turnoutEl) {
+          turnoutEl.style.border = '2px dashed cyan';
+          turnoutEl.style.cursor = 'move';
+
+          const regionName = regionNames[index];
+          let dragState = {
+            isDragging: false,
+            startX: 0,
+            startY: 0,
+            startBottom: 0,
+            startRight: 0
+          };
+
+          const mouseDown = (e) => {
+            dragState.isDragging = true;
+            dragState.startX = e.clientX;
+            dragState.startY = e.clientY;
+
+            const currentBottom = parseInt(turnoutEl.style.bottom) || 5;
+            const currentRight = parseInt(turnoutEl.style.right) || 10;
+            dragState.startBottom = currentBottom;
+            dragState.startRight = currentRight;
+
+            e.preventDefault();
+          };
+
+          const mouseMove = (e) => {
+            if (!dragState.isDragging) return;
+
+            const deltaX = e.clientX - dragState.startX;
+            const deltaY = e.clientY - dragState.startY;
+
+            const newRight = dragState.startRight - deltaX;
+            const newBottom = dragState.startBottom + deltaY;
+
+            turnoutEl.style.bottom = `${newBottom}px`;
+            turnoutEl.style.right = `${newRight}px`;
+          };
+
+          const mouseUp = () => {
+            if (dragState.isDragging) {
+              const bottom = parseInt(turnoutEl.style.bottom) || 5;
+              const right = parseInt(turnoutEl.style.right) || 10;
+              console.log(`✅ ${regionName} 투표율: 투표율위치("${regionName}", ${bottom}, ${right})`);
+              dragState.isDragging = false;
+            }
+          };
+
+          turnoutEl.addEventListener('mousedown', mouseDown);
+          document.addEventListener('mousemove', mouseMove);
+          document.addEventListener('mouseup', mouseUp);
+
+          // 이벤트 제거를 위해 저장
+          turnoutEl._turnoutDragHandlers = { mouseDown, mouseMove, mouseUp };
+        }
+      });
+
+      console.log('✅ 투표율 드래그 모드 활성화 - 투표율을 드래그하여 위치 조정하세요');
+    } else {
+      regionClasses.forEach(className => {
+        const container = $(className);
+        const turnoutEl = container?.querySelector('.region-turnout');
+
+        if (turnoutEl && turnoutEl._turnoutDragHandlers) {
+          turnoutEl.style.border = 'none';
+          turnoutEl.style.cursor = 'default';
+
+          const handlers = turnoutEl._turnoutDragHandlers;
+          turnoutEl.removeEventListener('mousedown', handlers.mouseDown);
+          document.removeEventListener('mousemove', handlers.mouseMove);
+          document.removeEventListener('mouseup', handlers.mouseUp);
+
+          delete turnoutEl._turnoutDragHandlers;
+        }
+      });
+
+      console.log('✅ 투표율 드래그 모드 비활성화');
+    }
+  };
+
+  // 드래그 앤 드롭 기능
+  let dragState = {
+    isDragging: false,
+    element: null,
+    startX: 0,
+    startY: 0,
+    startLeft: 0,
+    startTop: 0
+  };
+
+  function enableDragForElement(element, regionName) {
+    element.style.border = '2px dashed red';
+    element.style.cursor = 'move';
+
+    const mouseDown = (e) => {
+      dragState.isDragging = true;
+      dragState.element = element;
+      dragState.startX = e.clientX;
+      dragState.startY = e.clientY;
+
+      const rect = element.getBoundingClientRect();
+      const parent = element.offsetParent.getBoundingClientRect();
+      dragState.startLeft = (rect.left - parent.left) / parent.width * 100;
+      dragState.startTop = (rect.top - parent.top) / parent.height * 100;
+
+      e.preventDefault();
+    };
+
+    element._dragMouseDown = mouseDown;
+    element.addEventListener('mousedown', mouseDown);
+  }
+
+  function disableDragForElement(element) {
+    element.style.border = 'none';
+    element.style.cursor = 'default';
+
+    if (element._dragMouseDown) {
+      element.removeEventListener('mousedown', element._dragMouseDown);
+      delete element._dragMouseDown;
+    }
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    if (!dragState.isDragging || !dragState.element) return;
+
+    const deltaX = e.clientX - dragState.startX;
+    const deltaY = e.clientY - dragState.startY;
+
+    // stat-card인 경우 픽셀 단위, region-stats인 경우 퍼센트 단위
+    if (dragState.element.classList.contains('stat-card')) {
+      // 픽셀 단위로 이동
+      const newLeft = dragState.startLeft + deltaX;
+      const newTop = dragState.startTop + deltaY;
+
+      dragState.element.style.left = newLeft + 'px';
+      dragState.element.style.top = newTop + 'px';
+    } else {
+      // 퍼센트 단위로 이동
+      const parent = dragState.element.offsetParent.getBoundingClientRect();
+      const newLeft = dragState.startLeft + (deltaX / parent.width * 100);
+      const newTop = dragState.startTop + (deltaY / parent.height * 100);
+
+      dragState.element.style.left = newLeft + '%';
+      dragState.element.style.top = newTop + '%';
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (dragState.isDragging && dragState.element) {
+      // stat-card는 통계칸드래그모드의 별도 핸들러에서 처리
+      if (dragState.element.classList.contains('stat-card')) {
+        return;
+      }
+
+      dragState.isDragging = false;
+
+      const element = dragState.element;
+      const left = parseFloat(element.style.left);
+      const top = parseFloat(element.style.top);
+
+      // 지역명 찾기
+      const classMap = {
+        'seoul-stats': '서울경기',
+        'gangwon-stats': '강원',
+        'chungcheong-stats': '충청',
+        'gyeongsang-stats': '경상',
+        'jeolla-stats': '전라',
+        'national-stats': '전국'
+      };
+
+      let regionName = '';
+      for (const [className, name] of Object.entries(classMap)) {
+        if (element.classList.contains(className)) {
+          regionName = name;
+          break;
+        }
+      }
+
+      console.log(`✅ ${regionName} 위치: ${regionName}위치(${top.toFixed(1)}, ${left.toFixed(1)})`);
+
+      dragState.element = null;
+    }
+  });
+
+  window.통계드래그모드 = function(enable = true) {
+    const statsElements = [
+      { el: $('.seoul-stats'), name: '서울경기' },
+      { el: $('.gangwon-stats'), name: '강원' },
+      { el: $('.chungcheong-stats'), name: '충청' },
+      { el: $('.gyeongsang-stats'), name: '경상' },
+      { el: $('.jeolla-stats'), name: '전라' },
+      { el: $('.national-stats'), name: '전국' }
+    ];
+
+    if (enable) {
+      statsElements.forEach(({ el, name }) => {
+        if (el) enableDragForElement(el, name);
+      });
+      console.log('✅ 드래그 모드 활성화 - 통계 박스를 드래그하여 위치 조정하세요');
+      console.log('   드래그 완료 시 콘솔에 좌표가 출력됩니다');
+    } else {
+      statsElements.forEach(({ el }) => {
+        if (el) disableDragForElement(el);
+      });
+      console.log('✅ 드래그 모드 비활성화');
+    }
+  };
+
+  // ===== 추가개표 테스트 함수 =====
+
+  // 테스트: 서울경기 개표 화면으로 바로 가기
+  window.서울경기개표 = function() {
+    // 모든 지역 완료 처리 (서울경기 제외)
+    const otherRegions = REGIONS.filter(r => r !== '서울경기');
+    state.regionsDone = [...otherRegions];
+    state.currentRegion = '서울경기';
+
+    // 서울경기 데이터 설정 (간단한 값)
+    state.regionData['서울경기'] = {
+      interest: 11,
+      support: {A:1, B:1, C:1, D:1}
+    };
+
+    // 화면4로 이동
+    state.bagRemain = { A:1, B:1, C:1, D:1, E:1 };
+    state.drawsRemain = 11;
+
+    const regionFile = REGION_MAP['서울경기'];
+    $('#region-box').src = `Resources/files/리소스/4단계_지역 개표/${regionFile}_Box.png`;
+    $('#remain-draws').textContent = state.drawsRemain;
+    $('#total-draws').textContent = state.drawsRemain;
+
+    isAnimating = false;
+    const drawBtn = $('#draw1');
+    drawBtn.disabled = false;
+    drawBtn.style.opacity = '1';
+
+    updateBagRemainDisplay();
+    recompute();
+    show('#screen4');
+
+    console.log('✅ 서울경기 개표 화면으로 이동했습니다.');
+    console.log('💡 동점만들기(10, 10, 5, 5)를 실행하여 A, B 후보를 동점으로 만들 수 있습니다.');
+  };
+
+  // 테스트: 동점 만들기
+  window.동점만들기 = function(a=10, b=10, c=5, d=5) {
+    state.baseTally = {A:a, B:b, C:c, D:d};
+    state.regionAcc = {A:0, B:0, C:0, D:0};
+    recompute();
+    console.log(`✅ 득표 설정: A=${a}, B=${b}, C=${c}, D=${d}`);
+  };
+
+  // 테스트: 개표 즉시 완료 (남은 횟수를 0으로)
+  window.개표완료 = function() {
+    state.drawsRemain = 0;
+    $('#remain-draws').textContent = 0;
+
+    if (!state.regionsDone.includes(state.currentRegion)) {
+      state.regionsDone.push(state.currentRegion);
+    }
+
+    C.forEach(k => {
+      state.baseTally[k] += state.regionAcc[k];
+      state.regionAcc[k] = 0;
+    });
+
+    const remaining = REGIONS.filter(r => !state.regionsDone.includes(r));
+
+    setTimeout(() => {
+      showFinishButton(remaining);
+    }, 100);
+
+    console.log('✅ 개표를 즉시 완료했습니다. 개표완료 버튼을 클릭하세요.');
+  };
+
+  // 테스트: 추가개표 직접 시작
+  window.추가개표테스트 = function(candidates = ['A', 'B']) {
+    if (!state.currentRegion) {
+      console.error('❌ 개표 화면이 아닙니다. 서울경기개표()를 먼저 실행하세요.');
+      return;
+    }
+
+    startRunoff(candidates);
+    console.log(`✅ 추가개표 시작: ${candidates.join(', ')} 후보`);
+  };
+
+  console.log('%c디버깅 도구 로드됨!', 'color: green; font-size: 16px; font-weight: bold;');
+  console.log('\n=== 미플 위치 조정 ===');
+  console.log('  미플위치조정(간격, 시작위치) - 현재: 미플위치조정(3.3, 1.5)');
   console.log('  컨테이너조정(left, bottom, width, height) - 현재: 컨테이너조정(6, 7.5, 88, 32)');
-  console.log('  미플세로조정(A, B, C, D) - 현재: 미플세로조정(22, 40, 58, 76)');
+  console.log('  미플세로조정(A, B, C, D) - 현재: 미플세로조정(22, 39, 56, 73)');
   console.log('  컨테이너테두리(true/false) - 예: 컨테이너테두리(true)');
   console.log('  테스트득표(a, b, c, d) - 예: 테스트득표(8, 12, 16, 20)');
+  console.log('\n=== 통계 위치 조정 ===');
+  console.log('  통계위치조정(지역명, top, left) - 예: 통계위치조정("서울경기", 23.5, 7)');
+  console.log('  서울경기위치(top, left) - 현재: 서울경기위치(23.5, 7)');
+  console.log('  강원위치(top, left) - 현재: 강원위치(23.5, 60)');
+  console.log('  충청위치(top, left) - 현재: 충청위치(43.5, 14)');
+  console.log('  경상위치(top, left) - 현재: 경상위치(43.5, 74)');
+  console.log('  전라위치(top, left) - 현재: 전라위치(65.5, 6)');
+  console.log('  전국위치(top, left) - 현재: 전국위치(63, 55)');
+  console.log('  통계크기조정(rank1크기, rank234크기) - 현재: 통계크기조정(110, 70)');
+  console.log('  통계페이지(색상) - 통계 페이지로 바로 이동 (예: 통계페이지("green"))');
+  console.log('  통계드래그모드(true/false) - 박스 위치 드래그 조정');
+  console.log('  통계칸드래그모드(true/false) - 박스 내 칸들 드래그 조정');
+  console.log('  통계칸위치(지역, rank, top, left) - 예: 통계칸위치("서울경기", "rank1", 0, 0)');
+  console.log('  통계칸크기(지역, rank, width, height) - 예: 통계칸크기("서울경기", "rank1", 120, 120)');
+  console.log('  전국크기(rank1크기, rank234크기) - 전국 박스 크기 조정 (예: 전국크기(150, 90))');
+  console.log('\n=== 추가개표 테스트 ===');
+  console.log('  서울경기개표() - 서울경기 개표 화면으로 바로 이동');
+  console.log('  동점만들기(a, b, c, d) - 득표수 설정 (기본값: 10, 10, 5, 5)');
+  console.log('  개표완료() - 현재 지역 개표를 즉시 완료');
+  console.log('  추가개표테스트([후보배열]) - 추가개표 직접 시작 (예: 추가개표테스트(["A","B"])');
+  console.log('\n💡 빠른 테스트: 서울경기개표() → 동점만들기() → 개표완료()');
 })();
 </script>
 
