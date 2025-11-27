@@ -2493,7 +2493,11 @@
 
       // 투표율 계산: 개표회수 / 주머니 내부 표의 총개수
       const totalVotesDrawn = C.reduce((sum, k) => sum + (results[k] || 0), 0);
-      const totalVotesInBag = C.reduce((sum, k) => sum + (regionData.support[k] || 0), 0);
+      let totalVotesInBag = C.reduce((sum, k) => sum + (regionData.support[k] || 0), 0);
+
+      // E표(1개)도 유권자에 포함
+      totalVotesInBag += 1;
+
       const turnout = totalVotesInBag > 0 ? (totalVotesDrawn / totalVotesInBag * 100) : 0;
 
       // HTML 업데이트
@@ -2553,6 +2557,10 @@
         nationalTotalBag += regionData.support[k] || 0;
       });
     });
+
+    // E표(지역 수만큼)도 유권자에 포함
+    nationalTotalBag += REGIONS.length;
+
     const nationalTurnout = nationalTotalBag > 0 ? (nationalTotalDrawn / nationalTotalBag * 100) : 0;
 
     const nationalContainer = $('.national-stats');
