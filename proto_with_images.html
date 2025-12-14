@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a3a4a">
   <title>프레지던트 메이커 - 개표 시뮬레이터</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2636,6 +2638,40 @@
 
   // 초기 표시
   show('#screen1');
+
+  // ===== 모바일 전체화면 + 가로모드 (첫 터치 시) =====
+  function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      || (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+  }
+
+  if (isMobile()) {
+    let fullscreenRequested = false;
+
+    // 전체화면 진입 시 가로모드 잠금
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement && screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
+    });
+
+    const enableFullscreen = () => {
+      if (fullscreenRequested) return;
+      fullscreenRequested = true;
+
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(() => {});
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    };
+
+    document.addEventListener('click', enableFullscreen, { once: true });
+    document.addEventListener('touchstart', enableFullscreen, { once: true });
+  }
 
   // ===== 디버깅 헬퍼: 도움말 =====
   window.도움말 = function() {
