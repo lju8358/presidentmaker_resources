@@ -1018,11 +1018,11 @@
   /* ===== 화면4: 개표 ===== */
   .counting-area {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: 32px;
-    margin-top: 25.5%;
+    margin-top: 292px;
     margin-bottom: 25px;
     padding: 22px 72px;
     background: transparent;
@@ -1546,20 +1546,20 @@
   }
 
   .national-stats {
-    top: 76.8%;
-    left: 59.5%;
+    top: 73.6%;
+    left: 60.3%;
   }
 
   .transparent-back-btn {
     position: absolute;
-    left: 3%;
+    right: 3%;
     bottom: 3%;
     width: 11%;
     height: 6%;
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 10;
+    z-index: 100;
     transition: transform 0.2s;
     touch-action: manipulation;
   }
@@ -1574,47 +1574,8 @@
     }
   }
 
-  /* ===== 반응형: 태블릿 이상 (768px+) ===== */
-  @media (min-width: 768px) {
-    .counting-area {
-      flex-direction: row;
-      justify-content: space-between;
-    }
-
-    .final-results {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  /* ===== 반응형: 데스크톱 (1024px+) ===== */
-  @media (min-width: 1024px) {
-    .screen-container {
-      padding: var(--spacing-lg);
-    }
-  }
-
-  /* ===== 반응형: 대형 화면 (1440px+) ===== */
-  /* scale 방식 사용으로 미디어 쿼리 불필요 */
-
-  /* ===== 모바일 최적화 (작은 화면) ===== */
-  /* scale 방식을 사용하므로 대부분의 모바일 최적화가 자동으로 처리됨 */
-  @media (max-width: 767px) {
-    /* 필요시 레이아웃 변경만 유지 */
-    .region-selection {
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-
-    .region-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-    }
-
-    .screen3-content {
-      grid-template-columns: 1fr;
-      gap: 25px;
-    }
-  }
+  /* ===== 반응형 미디어 쿼리 제거됨 ===== */
+  /* scale 방식을 사용하므로 모든 레이아웃 미디어 쿼리 불필요 */
 
   /* ===== 스크롤바 스타일 ===== */
   .main-panel::-webkit-scrollbar,
@@ -2612,9 +2573,10 @@
     show('#screen6');
   });
 
-  // 결과로 돌아가기 버튼
+  // 결과로 돌아가기 버튼 (화면6 → 화면4)
   $('#back-to-result').addEventListener('click', () => {
-    show('#screen5');
+    show('#screen4');
+    showFinishButton([]);
   });
 
   // ===== Scale 계산 (고정 크기 1594x1145 기준) =====
