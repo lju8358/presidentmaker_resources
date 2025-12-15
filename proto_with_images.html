@@ -1518,7 +1518,7 @@
   .chungcheong-stats .region-turnout { bottom: 23px; right: -364px; }
   .gyeongsang-stats .region-turnout { bottom: 24px; right: -366px; }
   .jeolla-stats .region-turnout { bottom: 21px; right: -361px; }
-  .national-stats .region-turnout { bottom: 17px; right: -463px; }
+  .national-stats .region-turnout { bottom: 5px; right: -425px; }
 
   /* 각 지역 위치 */
   .seoul-stats {
@@ -2324,9 +2324,20 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      transition: transform 0.2s;
+      pointer-events: none;
     `;
 
-    finishBtn.appendChild(finishImg);
+    overlay.appendChild(finishImg);
+    overlay.appendChild(finishBtn);
+
+    // 호버 효과
+    finishBtn.addEventListener('mouseenter', () => {
+      finishImg.style.transform = 'scale(1.05)';
+    });
+    finishBtn.addEventListener('mouseleave', () => {
+      finishImg.style.transform = 'scale(1)';
+    });
 
     // 오버레이 제거 함수
     function removeOverlay() {
